@@ -2,6 +2,8 @@ import os
 import json
 import shutil
 import textwrap
+import subprocess
+from datetime import datetime
 from setup import trillian_root, project_root, command, config
 
 def help():
@@ -24,7 +26,16 @@ def help():
 
 			\033[1mnorm:\033[0m
 			Checks for norm errors.
-		
+
+			\033[1minstall:\033[0m
+			Updates trillian.json with the new dependency.
+					   
+			\033[1muninstall:\033[0m
+			Updates trillian.json with the removed dependency.
+			
+			\033[1mversion:\033[0m
+			Prints the version of trillian.
+					   
 		May your code be bug free. Bye!
 	""").strip('\n'))
 
@@ -35,9 +46,6 @@ def init():
 	os.makedirs('modules')
 	os.makedirs('source')
 	os.makedirs('tests')
-
-def norm():
-	pass
 
 def build():
 	if config['trillian']['type'] != 'project':
@@ -66,13 +74,13 @@ def build():
 	fill_dependencies_set(dependencies_set, config['trillian']['dependencies'])
 
 	# copy newer and non-existent for modules
-	def copy_headers_that_are_newer(dependency):
+	def copy_headers_that_are_newer_for_modules(dependency):
 		path = trillian_root + '../../modules/' + dependency + '/' + 'includes/'
 		original_paths = []
 		submit_paths = []
 		for root, dirs, files in os.walk(path):
 			for file in files:
-				original_paths.append(root + file);
+				original_paths.append(os.path.join(root, file));
 				submit_paths.append(project_root + '/submit' + '/' + dependency + '/' + file);
 		for original_path, submit_path in zip(original_paths, submit_paths):
 			if os.path.exists(submit_path) == False:
@@ -81,10 +89,9 @@ def build():
 				original_timestamp = os.path.getmtime(original_path)
 				submit_timestamp = os.path.getmtime(submit_path)
 				if submit_timestamp < original_timestamp:
-					print("Newer.")
 					shutil.copyfile(original_path, submit_path)
 
-	def copy_sources_that_are_newer(dependency):
+	def copy_sources_that_are_newer_for_modules(dependency):
 		path = trillian_root + '../../modules/' + dependency + '/' + 'source/'
 		original_paths = []
 		submit_paths = []
@@ -92,36 +99,104 @@ def build():
 			for file in files:
 				original_paths.append(os.path.join(root, file));
 				submit_paths.append(project_root + '/submit' + '/' + dependency + '/' + file);
-		print(original_paths)
-		# for original_path, submit_path in zip(original_paths, submit_paths):
-		# 	if os.path.exists(submit_path) == False:
-		# 		shutil.copyfile(original_path, submit_path)
-		# 	else:
-		# 		original_timestamp = os.path.getmtime(original_path)
-		# 		submit_timestamp = os.path.getmtime(submit_path)
-		# 		if submit_timestamp < original_timestamp:
-		# 			print("Newer.")
-		# 			shutil.copyfile(original_path, submit_path)
+		for original_path, submit_path in zip(original_paths, submit_paths):
+			if os.path.exists(submit_path) == False:
+				shutil.copyfile(original_path, submit_path)
+			else:
+				original_timestamp = os.path.getmtime(original_path)
+				submit_timestamp = os.path.getmtime(submit_path)
+				if submit_timestamp < original_timestamp:
+					shutil.copyfile(original_path, submit_path)
 
-	def copy_headers_and_sources_that_are_newer(dependencies):
+	def copy_headers_and_sources_that_are_newer_for_modules(dependencies):
 		for dependency in dependencies:
 			path = project_root + '/submit' + '/' + dependency
 			if os.path.exists(path) == False:
 				os.makedirs(path)
 		for dependency in dependencies:
-			copy_headers_that_are_newer(dependency)
-			copy_sources_that_are_newer(dependency)
+			copy_headers_that_are_newer_for_modules(dependency)
+			copy_sources_that_are_newer_for_modules(dependency)
 
-	copy_headers_and_sources_that_are_newer(dependencies_set)
+	copy_headers_and_sources_that_are_newer_for_modules(dependencies_set)
 
 	# copy newer and non-existent for the project
+	def copy_everything_that_are_newer_for_project():
+		path = os.path.join(project_root, 'source')
+		original_paths = []
+		submit_paths = []
+		for root, dirs, files in os.walk(path):
+			for file in files:
+				original_paths.append(os.path.join(root, file))
+				submit_paths.append(os.path.join(project_root, 'submit', config['trillian']['name'], file))
+		for original_path, submit_path in zip(original_paths, submit_paths):
+			if os.path.exists(submit_path) == False:
+				shutil.copyfile(original_path, submit_path)
+			else:
+				original_timestamp = os.path.getmtime(original_path)
+				submit_timestamp = os.path.getmtime(submit_path)
+				if submit_timestamp < original_timestamp:
+					shutil.copyfile(original_path, submit_path)
+
+	def copy_headers_and_sources_that_are_newer_for_project():
+		path = os.path.join(project_root, 'submit', config['trillian']['name'])
+		if os.path.exists(path) == False:
+			os.makedirs(path)
+		copy_everything_that_are_newer_for_project()
+
+	copy_headers_and_sources_that_are_newer_for_project()
 
 	# check for deleted files and update submit accordingly
 	# if there's at least one delete all .d files
 
+	# def check_deleted_files_and_update_accordingly():
+	# 	path = os.path.join(project_root, 'submit')
+	# 	for root, dirs, files in os.walk(path):
+	# 		for file in files:
+	# 			submit_path = os.path.join(root, file)
+	# 			original_path = os.path.join()
+
+	# check_deleted_files_and_update_accordingly()
+
 	# generate makefile for the chosen mode
 
+	def generate_makefile():
+		username = config['user']['username']
+		current_datetime = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+		name = config['trillian']['name']
+		makefile = textwrap.dedent(f"""
+			# **************************************************************************** #
+			#                                                                              #
+			#                                                         :::      ::::::::    #
+			#    Makefile                                           :+:      :+:    :+:    #
+			#                                                     +:+ +:+         +:+      #
+			#    By: {format(f'{username} <{username}@student.42.fr>', '<42')} +#+  +:+       +#+         #
+			#                                                 +#+#+#+#+#+   +#+            #
+			#    Created: {current_datetime} by {format(username, '<17')} #+#    #+#              #
+			#    Updated: {current_datetime} by {format(username, '<16')} ###   ########.fr        #
+			#                                                                              #
+			# **************************************************************************** #
+
+			# This Makefile was automatically generated by Trillian.
+			# See https://github.com/brenohildebrand/ft_modules to learn more.
+
+			name = {name}
+		""").strip('\n')
+		path = os.path.join(project_root, 'submit', 'Makefile')
+		with open(path, 'w') as file:
+			file.write(makefile)
+
+	generate_makefile()
+
 	# run make
+	working_directory = os.path.join(project_root, 'submit')
+	completed_process = subprocess.run(['make'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=working_directory)
+	if completed_process.returncode != 0:
+		print(completed_process.stderr.decode('utf-8'))
+		quit()
+
+def norm():
+	pass
+
 
 def install():
 	# just add a dependency to the list of dependencies
@@ -145,10 +220,10 @@ match command:
 		help()
 	case 'init':
 		init()
-	case 'norm':
-		norm()
 	case 'build':
 		build()
+	case 'norm':
+		norm()
 	case 'install':
 		install()
 	case 'uninstall':
