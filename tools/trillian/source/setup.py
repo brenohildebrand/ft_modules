@@ -43,3 +43,7 @@ paths = None
 project_root = None
 if config['trillian']['type'] == 'project':
 	project_root = os.getcwd()
+
+# get list_of_modules
+path = os.path.join(trillian_root, '../../modules')
+list_of_modules = os.listdir(path)

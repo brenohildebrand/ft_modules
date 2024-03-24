@@ -1,10 +1,11 @@
 import os
+import sys
 import json
 import shutil
 import textwrap
 import subprocess
 from datetime import datetime
-from setup import trillian_root, project_root, command, config
+from setup import trillian_root, project_root, command, config, arguments, list_of_modules
 
 def help():
 	print(textwrap.dedent("""
@@ -23,6 +24,9 @@ def help():
 
 			\033[1mbuild:\033[0m
 			Builds the project.
+					   
+			\033[1mrun:\033[0m
+			Runs the project.
 
 			\033[1mnorm:\033[0m
 			Checks for norm errors.
@@ -104,8 +108,6 @@ def build():
 		if not os.path.exists(os.path.join(project_root, 'submit', dependency)):
 			os.makedirs(os.path.join(project_root,'submit', dependency))
 	for original_path, submit_path in zip(original_paths, submit_paths):
-		print('original: ', original_path)
-		print('submit: ', submit_path)
 		if os.path.exists(submit_path) == False:
 			shutil.copyfile(original_path, submit_path)
 		else:
@@ -120,13 +122,14 @@ def build():
 	# if it does not it should be deleted and all the dependencies files as well
 	for root, dirs, files in os.walk(os.path.join(project_root, 'submit')):
 		for file in files:
-			submit_path = os.path.join(root, file)
-			if submit_path not in submit_paths:
-				os.remove(submit_path)
-				for root, dirs, files in os.walk(os.path.join(project_root, 'submit')):
-					for file in files:
-						if file.endswith('.d'):
-							os.remove(os.path.join(root, file))
+			if file.endswith('.c'):
+				submit_path = os.path.join(root, file)
+				if submit_path not in submit_paths:
+					os.remove(submit_path)
+					for root, dirs, files in os.walk(os.path.join(project_root, 'submit')):
+						for file in files:
+							if file.endswith('.d'):
+								os.remove(os.path.join(root, file))
 
 	# generate makefile for the chosen mode
 	def generate_sources():
@@ -232,25 +235,54 @@ def build():
 	generate_makefile()
 
 	# run make
-	# working_directory = os.path.join(project_root, 'submit')
-	# completed_process = subprocess.run(['make'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=working_directory)
-	# if completed_process.returncode != 0:
-	# 	print(completed_process.stderr.decode('utf-8'))
-	# 	quit()
+	working_directory = os.path.join(project_root, 'submit')
+	completed_process = subprocess.run(['make'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=working_directory)
+	if completed_process.returncode != 0:
+		print(completed_process.stderr.decode('utf-8'))
+		quit(completed_process.returncode)
+
+def run():
+	build()
+	working_directory = os.path.join(project_root, 'submit')
+	command = './' + config['trillian']['name']
+	completed_process = subprocess.run([command] + arguments[2:], stdout=sys.stdout, stderr=sys.stderr, cwd=working_directory)
+	quit(completed_process.returncode)
 
 def norm():
-	pass
-
+	working_directory = os.path.join(project_root, 'source')
+	command = 'norminette'
+	completed_process = subprocess.run([command] + arguments[2:], stdout=sys.stdout, stderr=sys.stderr, cwd=working_directory)
+	quit(completed_process.returncode)
 
 def install():
 	# just add a dependency to the list of dependencies
 	# json.dump(config['trillian'], file, indent=4)
-	pass
+	modules = arguments[2:]
+	for module in modules:
+		if module not in list_of_modules:
+			print(f'Module {module} does not exist.')
+		elif module in config['trillian']['dependencies']:
+			print(f'Module {module} is already installed.')
+		else:
+			config['trillian']['dependencies'].append(module)
+	path = os.path.join(project_root, 'config', 'trillian.json')
+	with open(path, 'w') as file:
+		json.dump(config['trillian'], file, indent=4)
 
 def uninstall():
 	# just remove a dependency from the list of dependencies
 	# json.dump(config['trillian'], file, indent=4)
-	pass
+	modules = arguments[2:]
+	for module in modules:
+		if module not in list_of_modules:
+			print(f'Module {module} does not exist.')
+		elif module not in config['trillian']['dependencies']:
+			print(f'Module {module} is not installed.')
+		else:
+			config['trillian']['dependencies'].remove(module)
+	path = os.path.join(project_root, 'config', 'trillian.json')
+	with open(path, 'w') as file:
+		json.dump(config['trillian'], file, indent=4)
 
 def version():
 	if not config['meta'] or not config['meta']['version']:
@@ -266,11 +298,13 @@ match command:
 		init()
 	case 'build':
 		build()
+	case 'run':
+		run()
 	case 'norm':
 		norm()
-	case 'install':
+	case 'install' | 'add':
 		install()
-	case 'uninstall':
+	case 'uninstall' | 'remove':
 		uninstall()
 	case 'version':
 		version()
