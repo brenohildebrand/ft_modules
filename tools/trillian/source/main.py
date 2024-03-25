@@ -269,6 +269,28 @@ def install():
 	with open(path, 'w') as file:
 		json.dump(config['trillian'], file, indent=4)
 
+	if config['trillian']['editor'] == 'vscode':
+		if not 'c_cpp_properties' in config['editor']:
+			config['editor']['c_cpp_properties'] = {}
+		if not 'configurations' in config['editor']['c_cpp_properties']:
+			config['editor']['c_cpp_properties']['configurations'] = [
+				{
+					"name": "Linux",
+					"includePath": [],
+					"defines": [],
+					"intelliSenseMode": "linux-gcc-x64",
+            		"compilerPath": "/usr/bin/gcc",
+            		"cStandard": "c99",
+				}
+			]
+		for module in modules:
+			path = os.path.join(trillian_root, '../../modules', module, 'includes')
+			if path not in config['editor']['c_cpp_properties']['configurations'][0]['includePath']:
+				config['editor']['c_cpp_properties']['configurations'][0]['includePath'].append(os.path.join(trillian_root, '../../modules', module, 'includes'))
+		path = os.path.join(project_root, '.vscode', 'c_cpp_properties.json')
+		with open(path, 'w') as file:
+			json.dump(config['editor']['c_cpp_properties'], file, indent=4)
+
 def uninstall():
 	# just remove a dependency from the list of dependencies
 	# json.dump(config['trillian'], file, indent=4)
@@ -283,6 +305,15 @@ def uninstall():
 	path = os.path.join(project_root, 'config', 'trillian.json')
 	with open(path, 'w') as file:
 		json.dump(config['trillian'], file, indent=4)
+
+	if config['trillian']['editor'] == 'vscode':
+		for module in modules:
+			path = os.path.join(trillian_root, '../../modules', module, 'includes')
+			if path in config['editor']['c_cpp_properties']['configurations'][0]['includePath']:
+				config['editor']['c_cpp_properties']['configurations'][0]['includePath'].remove(os.path.join(trillian_root, '../../modules', module, 'includes'))
+		path = os.path.join(project_root, '.vscode', 'c_cpp_properties.json')
+		with open(path, 'w') as file:
+			json.dump(config['editor']['c_cpp_properties'], file, indent=4)
 
 def version():
 	if not config['meta'] or not config['meta']['version']:

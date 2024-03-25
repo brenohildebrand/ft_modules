@@ -47,3 +47,26 @@ if config['trillian']['type'] == 'project':
 # get list_of_modules
 path = os.path.join(trillian_root, '../../modules')
 list_of_modules = os.listdir(path)
+
+# get .vscode
+if config['trillian']['editor'] == 'vscode':
+	if not os.path.exists(os.path.join(project_root, '.vscode')):
+		os.mkdir(os.path.join(project_root, '.vscode'))
+		config['editor'] = {}
+	else:
+		config['editor'] = {}
+		names = ['c_cpp_properties', 'tasks.json', 'launch.json']
+		paths = [
+			os.path.join(project_root, '.vscode', 'c_cpp_properties.json'),
+			os.path.join(project_root, '.vscode', 'tasks.json'),
+			os.path.join(project_root, '.vscode', 'launch.json')
+		]
+		if len(names) != len(paths):
+			raise Exception('There is something wrong.')
+		for index in range(len(names)):
+			name = names[index]
+			path = paths[index]
+			if os.path.exists(path):
+				with open(path) as file:
+					data = json.load(file)
+				config['editor'][name] = data
