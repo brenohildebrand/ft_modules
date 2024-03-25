@@ -5,7 +5,7 @@ import shutil
 import textwrap
 import subprocess
 from datetime import datetime
-from setup import trillian_root, project_root, command, config, arguments, list_of_modules
+from setup import *
 
 def help():
 	print(textwrap.dedent("""
@@ -32,10 +32,14 @@ def help():
 			Checks for norm errors.
 
 			\033[1minstall:\033[0m
-			Updates trillian.json with the new dependency.
+			Updates trillian.json by adding the given modules to the dependencies. It also
+			updates the vscode configuration if the editor property is set to 'vscode' in
+			trillian.json.
 					   
 			\033[1muninstall:\033[0m
-			Updates trillian.json with the removed dependency.
+			Updates trillian.json by removing the given modules from the dependencies. It also
+			updates the vscode configuration if the editor property is set to 'vscode' in
+			trillian.json.
 			
 			\033[1mversion:\033[0m
 			Prints the version of trillian.
@@ -44,12 +48,24 @@ def help():
 	""").strip('\n'))
 
 def init():
-	os.makedirs('build')
+	if os.listdir(PROJECT_ROOT):
+		print('Trillian can only initialize a new project if the folder is empty.')
+		quit()
+	if CONFIG['editor'] == 'vscode':
+		os.makedirs('.vscode')
+		os.makedirs('.vscode/c_cpp_properties.json')
 	os.makedirs('config')
+	os.makedirs('config/trillian.json')
+	with open('config/trillian.json', 'w') as file:
+		json.dump(CONFIG['trillian'], file, indent=4)
 	os.makedirs('docs')
-	os.makedirs('modules')
 	os.makedirs('source')
-	os.makedirs('tests')
+	os.makedirs('submit')
+	os.makedirs('config')
+	os.makedirs('.gitignore')
+	with open('.gitignore', 'w') as file:
+		file.write('submit')
+	os.makedirs('README.md')
 
 def build():
 	if config['trillian']['type'] != 'project':
@@ -322,7 +338,7 @@ def version():
 	print(f'trillian-v{version}')
 
 # resolve command
-match command:
+match COMMAND:
 	case 'help':
 		help()
 	case 'init':

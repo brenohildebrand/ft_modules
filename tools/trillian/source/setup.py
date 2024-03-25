@@ -2,71 +2,71 @@ import os
 import sys
 import json
 
-# get trillian_root
-trillian_root = os.environ.get('TRILLIAN_ROOT')
-if (trillian_root[-1] != '/'):
-	trillian_root += '/'
+# This script is used to setup multiple important variables for Trillian.
 
-# get args
-arguments = sys.argv
-if len(sys.argv) <= 1:
-	command = "help"
-else:
-	command = arguments[1]
+def get_trillian_root():
+	TRILLIAN_ROOT = os.environ.get('TRILLIAN_ROOT')
+	if TRILLIAN_ROOT == None:
+		raise Exception('TRILLIAN_ROOT is not set.')
+	return (TRILLIAN_ROOT)
 
-# get config
-config = {}
-names = [
-	'trillian',
-	'user',
-	'meta'
-]
-paths = [
-	os.getcwd() + '/' + 'config/trillian.json',
-	trillian_root + 'config/' + 'user.json',
-	trillian_root + 'config/' + 'meta.json'
-]
-if len(names) != len(paths):
-	raise Exception('There is something wrong.')
-for index in range(len(names)):
-	name = names[index]
-	path = paths[index]
-	if os.path.exists(path):
-		with open(path) as file:
-			data = json.load(file)
+def get_arguments():
+	return (sys.argv)
+
+def get_command():
+	if len(ARGUMENTS) <= 1:
+		COMMAND = "help"
 	else:
-		raise Exception(f'File {path} does not exist.')
-	config[name] = data
-paths = None
+		COMMAND = ARGUMENTS[1]
+	return (COMMAND)
 
-# get project_root
-project_root = None
-if config['trillian']['type'] == 'project':
-	project_root = os.getcwd()
+def get_project_root():
+	return (os.getcwd())
 
-# get list_of_modules
-path = os.path.join(trillian_root, '../../modules')
-list_of_modules = os.listdir(path)
+def get_config():
+	CONFIG = {}
+	keys = [
+		'trillian',
+		'user',
+		'meta'
+	]
+	paths = [
+		PROJECT_ROOT + '/config/trillian.json',
+		TRILLIAN_ROOT + '/config/user.json',
+		TRILLIAN_ROOT + '/config/meta.json'
+	]
+	if len(keys) != len(paths):
+		raise Exception('The number of keys and paths does not match.')
+	for index in range(len(keys)):
+		key = keys[index]
+		path = paths[index]
+		if os.path.exists(path):
+			with open(path) as file:
+				contents = json.load(file)
+		else:
+			raise Exception(f'File {path} does not exist.')
+		CONFIG[key] = contents
+	keys = None
+	paths = None
 
-# get .vscode
-if config['trillian']['editor'] == 'vscode':
-	if not os.path.exists(os.path.join(project_root, '.vscode')):
-		os.mkdir(os.path.join(project_root, '.vscode'))
-		config['editor'] = {}
-	else:
-		config['editor'] = {}
-		names = ['c_cpp_properties', 'tasks.json', 'launch.json']
-		paths = [
-			os.path.join(project_root, '.vscode', 'c_cpp_properties.json'),
-			os.path.join(project_root, '.vscode', 'tasks.json'),
-			os.path.join(project_root, '.vscode', 'launch.json')
-		]
-		if len(names) != len(paths):
-			raise Exception('There is something wrong.')
-		for index in range(len(names)):
-			name = names[index]
-			path = paths[index]
-			if os.path.exists(path):
-				with open(path) as file:
-					data = json.load(file)
-				config['editor'][name] = data
+	if CONFIG['trillian']['editor'] == 'vscode':
+		if not os.path.exists(os.path.join(PROJECT_ROOT, '.vscode')):
+			os.mkdir(os.path.join(PROJECT_ROOT, '.vscode'))
+		CONFIG['editor'] = {}
+		if not os.path.exists(os.path.join(PROJECT_ROOT, '.vscode', 'c_cpp_properties.json')):
+			CONFIG['editor']['c_cpp_properties.json'] = {}
+		else:
+			with open(os.path.join(PROJECT_ROOT, '.vscode', 'c_cpp_properties.json')) as file:
+				contents = json.load(file)
+			CONFIG['editor']['c_cpp_properties.json'] = contents
+	return (CONFIG)
+
+def get_modules():
+	return (os.listdir(os.path.join(TRILLIAN_ROOT, '../../modules')))
+
+TRILLIAN_ROOT = get_trillian_root()
+ARGUMENTS = get_arguments()
+COMMAND = get_command()
+PROJECT_ROOT = get_project_root()
+CONFIG = get_config()
+MODULES = get_modules()
