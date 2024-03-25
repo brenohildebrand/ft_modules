@@ -25,6 +25,8 @@ def get_project_root():
 
 def get_config():
 	CONFIG = {}
+	if COMMAND == 'init':
+		return (CONFIG)
 	keys = [
 		'trillian',
 		'user',
@@ -49,16 +51,18 @@ def get_config():
 	keys = None
 	paths = None
 
-	if CONFIG['trillian']['editor'] == 'vscode':
+	if not 'editor' in CONFIG['trillian']:
+		CONFIG['trillian']['editor'] = None
+	elif CONFIG['trillian']['editor'] == 'vscode':
 		if not os.path.exists(os.path.join(PROJECT_ROOT, '.vscode')):
 			os.mkdir(os.path.join(PROJECT_ROOT, '.vscode'))
 		CONFIG['editor'] = {}
 		if not os.path.exists(os.path.join(PROJECT_ROOT, '.vscode', 'c_cpp_properties.json')):
-			CONFIG['editor']['c_cpp_properties.json'] = {}
+			CONFIG['editor']['c_cpp_properties'] = {}
 		else:
 			with open(os.path.join(PROJECT_ROOT, '.vscode', 'c_cpp_properties.json')) as file:
 				contents = json.load(file)
-			CONFIG['editor']['c_cpp_properties.json'] = contents
+			CONFIG['editor']['c_cpp_properties'] = contents
 	return (CONFIG)
 
 def get_modules():

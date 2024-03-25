@@ -48,81 +48,104 @@ def help():
 	""").strip('\n'))
 
 def init():
-	if os.listdir(PROJECT_ROOT):
+	if (os.listdir(PROJECT_ROOT) == 0) or (os.listdir(PROJECT_ROOT) == 1 and '.git' in os.listdir(PROJECT_ROOT)):
 		print('Trillian can only initialize a new project if the folder is empty.')
 		quit()
-	if CONFIG['editor'] == 'vscode':
-		os.makedirs('.vscode')
-		os.makedirs('.vscode/c_cpp_properties.json')
 	os.makedirs('config')
-	os.makedirs('config/trillian.json')
 	with open('config/trillian.json', 'w') as file:
+		CONFIG['trillian'] = {
+			'name': os.path.basename(PROJECT_ROOT),
+			'type': 'project',
+			'dependencies': [],
+		}
 		json.dump(CONFIG['trillian'], file, indent=4)
 	os.makedirs('docs')
 	os.makedirs('source')
+	with open('source/main.c', 'w') as file:
+		username = 'trillian'
+		current_datetime = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+		file.write(textwrap.dedent(f"""
+			/* ************************************************************************** */
+			/*                                                                            */
+			/*                                                        :::      ::::::::   */
+			/*   main.c                                           :+:      :+:    :+:     */
+			/*                                                    +:+ +:+         +:+     */
+			/*   By: {format(f'{username} <{username}@student.42.fr>', '<42')} +#+  +:+       +#+        */
+			/*                                                 +#+#+#+#+#+   +#+          */
+			/*   Created: {current_datetime} by {format(username, '<17')} #+#    #+#             */
+			/*   Updated: {current_datetime} by {format(username, '<16')} ###   ########.fr       */
+			/*                                                                            */
+			/* ************************************************************************** */
+							 
+			#include <unistd.h>
+
+			int	main(void)
+			{{
+				write(1, "Hello, World!\\n", 14);
+				return (0);
+			}}
+
+		""").strip('\n'))
 	os.makedirs('submit')
-	os.makedirs('config')
-	os.makedirs('.gitignore')
 	with open('.gitignore', 'w') as file:
 		file.write('submit')
-	os.makedirs('README.md')
+	with open('README.md', 'w') as file:
+		file.write('')
 
 def build():
-	if config['trillian']['type'] != 'project':
+	if CONFIG['trillian']['type'] != 'project':
 		raise Exception(f'Trillian can only build projects.')
 
 	# copy everything to /submit
 	# create the dependencies_set (a set with all the dependencies recursevely)
-	def get_config_for_dependency(dependency):
-		config = None
-		path = trillian_root + '../../modules/' + dependency + '/' + 'config/' + 'trillian.json'
+	def get_module_dependencies(module):
+		path = os.path.join(TRILLIAN_ROOT, '../../modules', module, 'config', 'trillian.json')
 		if os.path.exists(path):
 			with open(path) as file:
 				data = json.load(file)
 		else:
 			raise Exception(f'There is no file at {path}.')
-		config = data;
-		return (config)
-	
-	def fill_dependencies_set(dependencies_set, dependencies):
-		for dependency in dependencies:
-			dependencies_set.add(dependency)
-			config = get_config_for_dependency(dependency)
-			fill_dependencies_set(dependencies_set, config['dependencies'])
+		return data['dependencies']
 
-	dependencies_set = set()
-	fill_dependencies_set(dependencies_set, config['trillian']['dependencies'])
+	def get_all_dependencies(all_dependencies, current_dependencies):
+		for module in current_dependencies:
+			all_dependencies.add(module)
+			module_dependencies = get_module_dependencies(module)
+			fill_all_dependencies(all_dependencies, module_dependencies)
+
+	all_dependencies = set()
+	get_all_dependencies(all_dependencies, CONFIG['trillian']['dependencies'])
 
 	# get original paths and submit paths
 	original_paths = []
 	submit_paths = []
 
-	for dependency in dependencies_set:
-		path = os.path.join(trillian_root, '../../modules', dependency, 'includes')
+	for module in all_dependencies:
+		path = os.path.join(TRILLIAN_ROOT, '../../modules', module, 'includes')
 		for root, dirs, files in os.walk(path):
 			for file in files:
 				original_paths.append(os.path.join(root, file))
-				submit_paths.append(os.path.join(project_root, 'submit', dependency, file))
-		path = os.path.join(trillian_root, '../../modules', dependency, 'source')
+				submit_paths.append(os.path.join(PROJECT_ROOT, 'submit', module, file))
+		path = os.path.join(TRILLIAN_ROOT, '../../modules', module, 'source')
 		for root, dirs, files in os.walk(path):
 			for file in files:
 				original_paths.append(os.path.join(root, file))
-				submit_paths.append(os.path.join(project_root, 'submit', dependency, file))
-	path = os.path.join(project_root, 'source')
+				submit_paths.append(os.path.join(PROJECT_ROOT, 'submit', module, file))
+	path = os.path.join(PROJECT_ROOT, 'source')
 	for root, dirs, files in os.walk(path):
 		for file in files:
 			original_paths.append(os.path.join(root, file))
-			submit_paths.append(os.path.join(project_root, 'submit', 'project', file))
+			submit_paths.append(os.path.join(PROJECT_ROOT, 'submit', 'project', file))
 
 
 	# copy newer and non-existent for modules
-	if not os.path.exists(os.path.join(project_root, 'submit')):
-		os.makedirs(os.path.join(project_root,'submit'))
-	if not os.path.exists(os.path.join(project_root, 'submit', 'project')):
-		os.makedirs(os.path.join(project_root,'submit', 'project'))
-	for dependency in dependencies_set:
-		if not os.path.exists(os.path.join(project_root, 'submit', dependency)):
-			os.makedirs(os.path.join(project_root,'submit', dependency))
+	if not os.path.exists(os.path.join(PROJECT_ROOT, 'submit')):
+		os.makedirs(os.path.join(PROJECT_ROOT,'submit'))
+	if not os.path.exists(os.path.join(PROJECT_ROOT, 'submit', 'project')):
+		os.makedirs(os.path.join(PROJECT_ROOT,'submit', 'project'))
+	for module in all_dependencies:
+		if not os.path.exists(os.path.join(PROJECT_ROOT, 'submit', module)):
+			os.makedirs(os.path.join(PROJECT_ROOT,'submit', module))
 	for original_path, submit_path in zip(original_paths, submit_paths):
 		if os.path.exists(submit_path) == False:
 			shutil.copyfile(original_path, submit_path)
@@ -136,13 +159,13 @@ def build():
 	# if there's at least one delete all .d files
 	# go through submit files and check if they exist on the submit_paths
 	# if it does not it should be deleted and all the dependencies files as well
-	for root, dirs, files in os.walk(os.path.join(project_root, 'submit')):
+	for root, dirs, files in os.walk(os.path.join(PROJECT_ROOT, 'submit')):
 		for file in files:
 			if file.endswith('.c'):
 				submit_path = os.path.join(root, file)
 				if submit_path not in submit_paths:
 					os.remove(submit_path)
-					for root, dirs, files in os.walk(os.path.join(project_root, 'submit')):
+					for root, dirs, files in os.walk(os.path.join(PROJECT_ROOT, 'submit')):
 						for file in files:
 							if file.endswith('.d'):
 								os.remove(os.path.join(root, file))
@@ -180,23 +203,22 @@ def build():
 
 	def generate_includes():
 		includes = ""
-		for dependency in dependencies_set:
-			includes += f'\t\t\t\t\t\t-iquote {dependency} \\\n'
+		for module in all_dependencies:
+			includes += f'\t\t\t\t\t\t-iquote {module} \\\n'
 		includes = includes[5:]
 		includes = includes[:-2]
 		includes += '\n'
 		return (includes)
 
 	def generate_makefile():
-		username = config['user']['username']
+		username = CONFIG['user']['username']
 		current_datetime = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
-		name = config['trillian']['name']
+		name = CONFIG['trillian']['name']
 		sources = generate_sources()
 		objects = generate_objects(sources)
 		headers = generate_headers()
 		dependencies = generate_dependencies(sources)
 		includes = generate_includes()
-		# sources = 
 		makefile = textwrap.dedent(f"""
 			# **************************************************************************** #
 			#                                                                              #
@@ -244,52 +266,54 @@ def build():
 
 			.PHONY: all clean fclean re
 		""").strip('\n')
-		path = os.path.join(project_root, 'submit', 'Makefile')
+		path = os.path.join(PROJECT_ROOT, 'submit', 'Makefile')
 		with open(path, 'w') as file:
 			file.write(makefile)
 
 	generate_makefile()
 
 	# run make
-	working_directory = os.path.join(project_root, 'submit')
+	working_directory = os.path.join(PROJECT_ROOT, 'submit')
 	completed_process = subprocess.run(['make'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=working_directory)
 	if completed_process.returncode != 0:
 		print(completed_process.stderr.decode('utf-8'))
 		quit(completed_process.returncode)
 
 def run():
-	build()
-	working_directory = os.path.join(project_root, 'submit')
-	command = './' + config['trillian']['name']
-	completed_process = subprocess.run([command] + arguments[2:], stdout=sys.stdout, stderr=sys.stderr, cwd=working_directory)
+	working_directory = os.path.join(PROJECT_ROOT, 'submit')
+	command = './' + CONFIG['trillian']['name']
+	if os.path.exists(os.path.join(working_directory, CONFIG['trillian']['name'])) == False:
+		print('No binary found.')
+		quit(1)
+	completed_process = subprocess.run([command] + ARGUMENTS[2:], stdout=sys.stdout, stderr=sys.stderr, cwd=working_directory)
 	quit(completed_process.returncode)
 
 def norm():
-	working_directory = os.path.join(project_root, 'source')
+	working_directory = os.path.join(PROJECT_ROOT, 'source')
 	command = 'norminette'
-	completed_process = subprocess.run([command] + arguments[2:], stdout=sys.stdout, stderr=sys.stderr, cwd=working_directory)
+	completed_process = subprocess.run([command] + ARGUMENTS[2:], stdout=sys.stdout, stderr=sys.stderr, cwd=working_directory)
 	quit(completed_process.returncode)
 
 def install():
 	# just add a dependency to the list of dependencies
 	# json.dump(config['trillian'], file, indent=4)
-	modules = arguments[2:]
-	for module in modules:
-		if module not in list_of_modules:
+	modules_to_install = ARGUMENTS[2:]
+	for module in modules_to_install:
+		if module not in MODULES:
 			print(f'Module {module} does not exist.')
-		elif module in config['trillian']['dependencies']:
+		elif module in CONFIG['trillian']['dependencies']:
 			print(f'Module {module} is already installed.')
 		else:
-			config['trillian']['dependencies'].append(module)
-	path = os.path.join(project_root, 'config', 'trillian.json')
+			CONFIG['trillian']['dependencies'].append(module)
+	path = os.path.join(PROJECT_ROOT, 'config', 'trillian.json')
 	with open(path, 'w') as file:
-		json.dump(config['trillian'], file, indent=4)
+		json.dump(CONFIG['trillian'], file, indent=4)
 
-	if config['trillian']['editor'] == 'vscode':
-		if not 'c_cpp_properties' in config['editor']:
-			config['editor']['c_cpp_properties'] = {}
-		if not 'configurations' in config['editor']['c_cpp_properties']:
-			config['editor']['c_cpp_properties']['configurations'] = [
+	if CONFIG['trillian']['editor'] == 'vscode':
+		if not 'c_cpp_properties' in CONFIG['editor']:
+			CONFIG['editor']['c_cpp_properties'] = {}
+		if not 'configurations' in CONFIG['editor']['c_cpp_properties']:
+			CONFIG['editor']['c_cpp_properties']['configurations'] = [
 				{
 					"name": "Linux",
 					"includePath": [],
@@ -299,42 +323,42 @@ def install():
             		"cStandard": "c99",
 				}
 			]
-		for module in modules:
-			path = os.path.join(trillian_root, '../../modules', module, 'includes')
-			if path not in config['editor']['c_cpp_properties']['configurations'][0]['includePath']:
-				config['editor']['c_cpp_properties']['configurations'][0]['includePath'].append(os.path.join(trillian_root, '../../modules', module, 'includes'))
-		path = os.path.join(project_root, '.vscode', 'c_cpp_properties.json')
+		for module in modules_to_install:
+			path = os.path.join(TRILLIAN_ROOT, '../../modules', module, 'includes')
+			if path not in CONFIG['editor']['c_cpp_properties']['configurations'][0]['includePath']:
+				CONFIG['editor']['c_cpp_properties']['configurations'][0]['includePath'].append(os.path.join(TRILLIAN_ROOT, '../../modules', module, 'includes'))
+		path = os.path.join(PROJECT_ROOT, '.vscode', 'c_cpp_properties.json')
 		with open(path, 'w') as file:
-			json.dump(config['editor']['c_cpp_properties'], file, indent=4)
+			json.dump(CONFIG['editor']['c_cpp_properties'], file, indent=4)
 
 def uninstall():
 	# just remove a dependency from the list of dependencies
 	# json.dump(config['trillian'], file, indent=4)
-	modules = arguments[2:]
-	for module in modules:
-		if module not in list_of_modules:
+	modules_to_uninstall = ARGUMENTS[2:]
+	for module in modules_to_uninstall:
+		if module not in MODULES:
 			print(f'Module {module} does not exist.')
-		elif module not in config['trillian']['dependencies']:
+		elif module not in CONFIG['trillian']['dependencies']:
 			print(f'Module {module} is not installed.')
 		else:
-			config['trillian']['dependencies'].remove(module)
-	path = os.path.join(project_root, 'config', 'trillian.json')
+			CONFIG['trillian']['dependencies'].remove(module)
+	path = os.path.join(PROJECT_ROOT, 'config', 'trillian.json')
 	with open(path, 'w') as file:
-		json.dump(config['trillian'], file, indent=4)
+		json.dump(CONFIG['trillian'], file, indent=4)
 
-	if config['trillian']['editor'] == 'vscode':
-		for module in modules:
-			path = os.path.join(trillian_root, '../../modules', module, 'includes')
-			if path in config['editor']['c_cpp_properties']['configurations'][0]['includePath']:
-				config['editor']['c_cpp_properties']['configurations'][0]['includePath'].remove(os.path.join(trillian_root, '../../modules', module, 'includes'))
-		path = os.path.join(project_root, '.vscode', 'c_cpp_properties.json')
+	if CONFIG['trillian']['editor'] == 'vscode':
+		for module in modules_to_uninstall:
+			path = os.path.join(TRILLIAN_ROOT, '../../modules', module, 'includes')
+			if path in CONFIG['editor']['c_cpp_properties']['configurations'][0]['includePath']:
+				CONFIG['editor']['c_cpp_properties']['configurations'][0]['includePath'].remove(os.path.join(TRILLIAN_ROOT, '../../modules', module, 'includes'))
+		path = os.path.join(PROJECT_ROOT, '.vscode', 'c_cpp_properties.json')
 		with open(path, 'w') as file:
-			json.dump(config['editor']['c_cpp_properties'], file, indent=4)
+			json.dump(CONFIG['editor']['c_cpp_properties'], file, indent=4)
 
 def version():
-	if not config['meta'] or not config['meta']['version']:
+	if not CONFIG['meta'] or not CONFIG['meta']['version']:
 		raise Exception(f'Could not find version.')
-	version = config['meta']['version']
+	version = CONFIG['meta']['version']
 	print(f'trillian-v{version}')
 
 # resolve command
