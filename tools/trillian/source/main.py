@@ -111,7 +111,7 @@ def build():
 		for module in current_dependencies:
 			all_dependencies.add(module)
 			module_dependencies = get_module_dependencies(module)
-			fill_all_dependencies(all_dependencies, module_dependencies)
+			get_all_dependencies(all_dependencies, module_dependencies)
 
 	all_dependencies = set()
 	get_all_dependencies(all_dependencies, CONFIG['trillian']['dependencies'])
@@ -161,7 +161,7 @@ def build():
 	# if it does not it should be deleted and all the dependencies files as well
 	for root, dirs, files in os.walk(os.path.join(PROJECT_ROOT, 'submit')):
 		for file in files:
-			if file.endswith('.c'):
+			if file.endswith('.c') or file.endswith('.h'):
 				submit_path = os.path.join(root, file)
 				if submit_path not in submit_paths:
 					os.remove(submit_path)
