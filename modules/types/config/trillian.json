@@ -1,5 +1,5 @@
 {
 	"name": "types",
 	"type": "module",
-	"dependencies": ["memory"]
+	"dependencies": ["utils"]
 }

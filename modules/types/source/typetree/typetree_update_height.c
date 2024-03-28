@@ -1,25 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list.c                                             :+:      :+:    :+:   */
+/*   typetree_update_height.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 17:00:58 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/27 17:19:30 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/28 15:54:48 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/28 15:54:53 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "list.h"
+#include "typetree.h"
 
-t_type	list(void)
+void	typetree_update_height(t_typetree typetree)
 {
-	static struct s_type	type = {
-		.name = "list",
-		.size = sizeof(struct s_list),
-		.create = (t_pointer (*)(void))list_create,
-		.destroy = (void (*)(t_pointer))list_destroy
-	};
+	int	lheight;
+	int	rheight;
 
-	return (&type);
+	lheight = typetree_get_height(typetree->ltree);
+	rheight = typetree_get_height(typetree->rtree);
+	if (lheight > rheight)
+	{
+		typetree->height = 1 + lheight;
+	}
+	else
+	{
+		typetree->height = 1 + rheight;
+	}
 }

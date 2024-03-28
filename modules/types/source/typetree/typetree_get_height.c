@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   deallocate.c                                       :+:      :+:    :+:   */
+/*   typetree_get_height.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/09 22:52:44 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/24 20:10:19 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/28 15:54:13 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/28 15:54:18 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "memtree.h"
+#include "typetree.h"
 
-/**
- * Deallocates the memory at the given address by removing its entry
- * from the memory tree.
- *
- * @param address The address of the memory to deallocate.
- */
-void deallocate(void *address)
+int	typetree_get_height(t_typetree typetree)
 {
-	memtree_delete(address);
+	if (typetree == NULL)
+	{
+		return (0);
+	}
+	else
+	{
+		return (typetree->height);
+	}
 }

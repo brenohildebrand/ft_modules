@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list.c                                             :+:      :+:    :+:   */
+/*   safe_free.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 17:00:58 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/27 17:19:30 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/02/09 22:52:44 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/28 00:47:56 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "list.h"
+#include "memtree.h"
 
-t_type	list(void)
+void	safe_free(void *address)
 {
-	static struct s_type	type = {
-		.name = "list",
-		.size = sizeof(struct s_list),
-		.create = (t_pointer (*)(void))list_create,
-		.destroy = (void (*)(t_pointer))list_destroy
-	};
-
-	return (&type);
+	memtree_delete(address);
 }

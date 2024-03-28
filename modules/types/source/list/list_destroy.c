@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list.c                                             :+:      :+:    :+:   */
+/*   list_destroy.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 17:00:58 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/27 17:19:30 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/27 17:20:19 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/28 15:42:35 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "types.h"
 #include "list.h"
+#include "any.h"
 
-t_type	list(void)
+void	list_destroy(t_list instance)
 {
-	static struct s_type	type = {
-		.name = "list",
-		.size = sizeof(struct s_list),
-		.create = (t_pointer (*)(void))list_create,
-		.destroy = (void (*)(t_pointer))list_destroy
-	};
+	int	i;
 
-	return (&type);
+	if (instance == NULL)
+		return ;
+	i = instance->start;
+	while (i <= instance->end)
+	{
+		any_destroy(instance->content[i]);
+		i++;
+	}
+	deallocate(instance->content);
+	delete(instance);
 }

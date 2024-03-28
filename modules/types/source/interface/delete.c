@@ -1,25 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list.c                                             :+:      :+:    :+:   */
+/*   delete.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 17:00:58 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/27 17:19:30 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/28 06:25:21 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/28 06:26:17 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "list.h"
+#include "types.h"
+#include "typetree.h"
 
-t_type	list(void)
+void	delete(void *instance)
 {
-	static struct s_type	type = {
-		.name = "list",
-		.size = sizeof(struct s_list),
-		.create = (t_pointer (*)(void))list_create,
-		.destroy = (void (*)(t_pointer))list_destroy
-	};
-
-	return (&type);
+	typetree_delete(instance);
 }

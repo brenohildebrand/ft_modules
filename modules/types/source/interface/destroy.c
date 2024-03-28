@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list.c                                             :+:      :+:    :+:   */
+/*   destroy.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 17:00:58 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/27 17:19:30 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/27 17:16:28 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/28 15:53:01 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "list.h"
+#include "types.h"
+#include "typetree.h"
+#include "utils.h"
 
-t_type	list(void)
+void	destroy(void *instance)
 {
-	static struct s_type	type = {
-		.name = "list",
-		.size = sizeof(struct s_list),
-		.create = (t_pointer (*)(void))list_create,
-		.destroy = (void (*)(t_pointer))list_destroy
-	};
+	t_type	type;
 
-	return (&type);
+	type = typetree_search(instance);
+	assert(type != NULL, "Instance does not have a type.");
+	assert(type->destroy != NULL, "Type does not have the destroy function.");
+	type->destroy(instance);
 }

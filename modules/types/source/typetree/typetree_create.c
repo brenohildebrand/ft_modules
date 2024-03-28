@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list.c                                             :+:      :+:    :+:   */
+/*   typetree_create.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 17:00:58 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/27 17:19:30 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/28 15:53:51 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/28 15:55:11 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "list.h"
+#include "typetree.h"
 
-t_type	list(void)
+t_typetree	typetree_create(t_type type, void *address)
 {
-	static struct s_type	type = {
-		.name = "list",
-		.size = sizeof(struct s_list),
-		.create = (t_pointer (*)(void))list_create,
-		.destroy = (void (*)(t_pointer))list_destroy
-	};
+	t_typetree	typetree;
 
-	return (&type);
+	typetree = malloc(sizeof(struct s_typetree));
+	if (typetree == NULL)
+	{
+		typetree_destroy();
+		return (NULL);
+	}
+	typetree->height = 1;
+	typetree->ltree = NULL;
+	typetree->rtree = NULL;
+	typetree->address = address;
+	typetree->type = type;
+	return (typetree);
 }

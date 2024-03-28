@@ -109,9 +109,10 @@ def build():
 
 	def get_all_dependencies(all_dependencies, current_dependencies):
 		for module in current_dependencies:
-			all_dependencies.add(module)
-			module_dependencies = get_module_dependencies(module)
-			get_all_dependencies(all_dependencies, module_dependencies)
+			if not module in all_dependencies:
+				all_dependencies.add(module)
+				module_dependencies = get_module_dependencies(module)
+				get_all_dependencies(all_dependencies, module_dependencies)
 
 	all_dependencies = set()
 	get_all_dependencies(all_dependencies, CONFIG['trillian']['dependencies'])
