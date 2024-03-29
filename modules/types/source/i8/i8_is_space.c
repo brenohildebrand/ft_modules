@@ -1,26 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   any.h                                              :+:      :+:    :+:   */
+/*   i8_is_space.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/28 15:36:34 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/28 15:39:04 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/28 16:46:49 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/28 16:47:20 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ANY_H
-# define ANY_H
+#include "types.h"
 
-# include "types.h"
-
-/**
- * Any is a type that can represent any type. It's declared in types.h.
-*/
-
-t_type	any(void);
-t_any	any_create(void);
-void	any_destroy(t_any instance);
-
-#endif
+t_bool	i8_is_space(t_i8 value)
+{
+	return ((value >= '\t' && value <= '\r') || value == ' ');
+}
