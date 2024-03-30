@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:06:31 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/28 15:49:15 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/29 18:31:25 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ struct s_type {
 	t_bool		is_value;
 	t_bool		is_instance;
 	t_pointer	(*create)(void);
-	void		(*destroy)(t_pointer);
+	void		(*destroy)(t_instance);
+	t_i32		(*compare)(t_instance, t_instance);
 };
 
 typedef struct s_any			*t_any;

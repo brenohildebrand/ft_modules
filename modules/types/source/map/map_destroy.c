@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   any.h                                              :+:      :+:    :+:   */
+/*   map_destroy.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/28 15:36:34 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/29 18:29:34 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/29 22:02:06 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/29 22:06:47 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ANY_H
-# define ANY_H
+#include "map.h"
 
-# include "types.h"
+void	map_destroy(t_map instance)
+{
+	t_i32	i;
 
-/**
- * Any is a type that can represent any type. It's declared in types.h.
-*/
-
-t_type	any(void);
-t_any	any_create(void);
-void	any_destroy(t_any instance);
-t_i32	any_compare(t_any instance, t_any another_instance);
-t_i32	any_as_i32(t_any instance);
-
-#endif
+	if (instance == NULL)
+	{
+		return ;
+	}
+	i = 0;
+	while (i < instance->capacity)
+	{
+		map_entry_destroy(instance->content[i]);
+		i++;
+	}
+	delete(instance);
+}

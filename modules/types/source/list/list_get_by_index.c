@@ -1,31 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list_destroy.c                                     :+:      :+:    :+:   */
+/*   list_get_by_index.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 17:20:19 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/29 22:04:56 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/29 18:22:04 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/29 18:28:06 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "types.h"
 #include "list.h"
-#include "any.h"
+#include "utils.h"
 
-void	list_destroy(t_list instance)
+t_any	list_get_by_index(t_list instance, t_i32 index)
 {
-	t_i32	i;
-
-	if (instance == NULL)
-		return ;
-	i = instance->start;
-	while (i <= instance->end)
+	if (index < 0)
 	{
-		any_destroy(instance->content[i]);
-		i++;
+		index = instance->length + index;
 	}
-	deallocate(instance->content);
-	delete(instance);
+	if (index < 0)
+	{
+		print_to_stderr("No way! You can't access an index on a list that \
+						is less than its negative length.");
+		quit(1);
+	}
+	if (index >= instance->length)
+	{
+		return (NULL);
+	}
+	return (instance->content[instance->start + index]);
 }

@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:59:49 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/28 20:54:07 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/29 18:26:13 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,7 @@ t_list	list_create(void);
 void	list_destroy(t_list list);
 void	list_expand(t_list instance);
 void	list_push(t_list instance, t_any value);
+t_i32	list_get_length(t_list instance);
+t_any	list_get_by_index(t_list instance, t_i32 index);
 
 #endif

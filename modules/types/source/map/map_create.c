@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   any.h                                              :+:      :+:    :+:   */
+/*   map_create.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/28 15:36:34 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/29 18:29:34 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/29 22:00:15 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/29 22:01:55 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ANY_H
-# define ANY_H
+#include "map.h"
 
-# include "types.h"
+t_map	map_create(void)
+{
+	t_map	instance;
 
-/**
- * Any is a type that can represent any type. It's declared in types.h.
-*/
-
-t_type	any(void);
-t_any	any_create(void);
-void	any_destroy(t_any instance);
-t_i32	any_compare(t_any instance, t_any another_instance);
-t_i32	any_as_i32(t_any instance);
-
-#endif
+	instance = new(map);
+	instance->size = 0;
+	instance->capacity = 16;
+	instance->content = \
+		(t_map_entry *)allocate(instance->capacity * sizeof(t_map_entry));
+	return (instance);
+}

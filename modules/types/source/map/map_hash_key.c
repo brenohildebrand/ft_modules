@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   any.h                                              :+:      :+:    :+:   */
+/*   map_hash_key.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/28 15:36:34 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/29 18:29:34 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/29 22:34:12 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/29 22:36:14 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ANY_H
-# define ANY_H
+#include "types.h"
+#include "map.h"
 
-# include "types.h"
+t_i32	map_hash_key(t_any key)
+{
+	t_i32	i;
+	t_i32	hash;
 
-/**
- * Any is a type that can represent any type. It's declared in types.h.
-*/
-
-t_type	any(void);
-t_any	any_create(void);
-void	any_destroy(t_any instance);
-t_i32	any_compare(t_any instance, t_any another_instance);
-t_i32	any_as_i32(t_any instance);
-
-#endif
+	hash = 5381;
+	i = 0;
+	while (i < sizeof(union u_any))
+	{
+		hash = ((hash << 5) + hash) + ((t_u8 *)(&key->value))[i];
+		i++;
+	}
+	return (hash);
+}

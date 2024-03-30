@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 20:50:25 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/28 20:59:49 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/29 18:39:15 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 #include "types.h"
 
-t_any	i32_to_any(t_i32 value);
 t_type	i32(void);
+t_i32	i32_compare(t_any instance, t_any another_instance);
+t_any	i32_to_any(t_i32 value);
 
 #endif

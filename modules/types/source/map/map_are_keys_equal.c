@@ -1,28 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   any.h                                              :+:      :+:    :+:   */
+/*   map_are_keys_equal.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/28 15:36:34 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/29 18:29:34 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/29 22:13:59 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/29 22:30:56 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ANY_H
-# define ANY_H
+#include "types.h"
 
-# include "types.h"
-
-/**
- * Any is a type that can represent any type. It's declared in types.h.
-*/
-
-t_type	any(void);
-t_any	any_create(void);
-void	any_destroy(t_any instance);
-t_i32	any_compare(t_any instance, t_any another_instance);
-t_i32	any_as_i32(t_any instance);
-
-#endif
+t_bool	map_are_keys_equal(t_any key, t_any another_key)
+{
+	t_i32	i;
+	
+	if (key->type != another_key->type)
+	{
+		return (FALSE);
+	}
+	i = 0;
+	while(i < sizeof(union u_any))
+	{
+		if (((t_u8 *)&key->value)[i] != ((t_u8 *)&another_key->value)[i])
+		{
+			return (FALSE);
+		}
+	}
+	return (TRUE);
+}
