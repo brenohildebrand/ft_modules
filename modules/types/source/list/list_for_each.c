@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_hash_key.c                                     :+:      :+:    :+:   */
+/*   list_for_each.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/29 22:34:12 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/30 01:29:19 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/30 02:10:52 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/30 02:12:33 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "types.h"
-#include "map.h"
+#include "types.h" 
+#include "list.h"
 
-t_i32	map_hash_key(t_any key)
-{
-	t_i32	i;
-	t_i32	hash;
+void	list_for_each(
+	t_list instance,
+	void (*callback)(t_any, t_i32, void *),
+	void *argument
+){
+	t_i32	index;
+	t_any	current;
 
-	hash = 5381;
-	i = 0;
-	while (i < (t_i32)sizeof(union u_any))
+	index = 0;
+	while (index < instance->length)
 	{
-		hash = ((hash << 5) + hash) + ((t_u8 *)(&key->value))[i];
-		i++;
+		current = instance->content[instance->start + index];
+		callback(current, index, argument);
+		index++;
 	}
-	return (hash);
 }

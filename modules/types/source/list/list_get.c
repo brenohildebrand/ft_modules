@@ -1,29 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_hash_key.c                                     :+:      :+:    :+:   */
+/*   list_get.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/29 22:34:12 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/30 01:29:19 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/30 02:02:39 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/30 02:05:28 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "types.h"
-#include "map.h"
+#include "list.h"
+#include "any.h"
+#include "utils.h"
 
-t_i32	map_hash_key(t_any key)
+t_any	list_get(t_list instance, t_any key)
 {
-	t_i32	i;
-	t_i32	hash;
-
-	hash = 5381;
-	i = 0;
-	while (i < (t_i32)sizeof(union u_any))
+	t_i32	index;
+	
+	index = any_to_i32(key);
+	if (index < 0)
 	{
-		hash = ((hash << 5) + hash) + ((t_u8 *)(&key->value))[i];
-		i++;
+		index = instance->length + index;
 	}
-	return (hash);
+	if (index < 0)
+	{
+		print_to_stdout("No way! You can't access an index on a list that is less than its negative length.");
+		quit(1);
+	}
+	if (index >= instance->length)
+		return (NULL);
+	return (instance->content[instance->start + index]);
 }

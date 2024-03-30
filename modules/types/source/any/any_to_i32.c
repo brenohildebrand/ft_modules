@@ -1,29 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_hash_key.c                                     :+:      :+:    :+:   */
+/*   any_to_i32.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/29 22:34:12 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/30 01:29:19 by bhildebr         ###   ########.fr       */
+/*   Created: 2024/03/30 02:04:58 by bhildebr          #+#    #+#             */
+/*   Updated: 2024/03/30 02:05:11 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "types.h"
-#include "map.h"
+#include "any.h"
 
-t_i32	map_hash_key(t_any key)
+t_i32	any_to_i32(t_any instance)
 {
-	t_i32	i;
-	t_i32	hash;
+	t_i32	value;
 
-	hash = 5381;
-	i = 0;
-	while (i < (t_i32)sizeof(union u_any))
-	{
-		hash = ((hash << 5) + hash) + ((t_u8 *)(&key->value))[i];
-		i++;
-	}
-	return (hash);
+	value = instance->value.i32;
+	any_destroy(instance);
+	return (value);
 }
