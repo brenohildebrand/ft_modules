@@ -6,12 +6,13 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:16 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/29 23:58:17 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/30 15:31:15 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "types.h"
 #include "map.h"
+#include "i32.h"
 
 void	map_set(t_map map, t_any key, t_any value)
 {
@@ -19,7 +20,7 @@ void	map_set(t_map map, t_any key, t_any value)
 	t_i32	index;
 
 	hash = map_hash_key(key);
-	index = hash % map->capacity;
+	index = i32_abs(hash % map->capacity);
 	if (map->size + 1 >= map->capacity / 3)
 	{
 		map_expand(map);

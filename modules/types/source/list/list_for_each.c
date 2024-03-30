@@ -6,12 +6,13 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 02:10:52 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/30 02:12:33 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/30 15:30:22 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "types.h" 
+#include "types.h"
 #include "list.h"
+#include <stdio.h>
 
 void	list_for_each(
 	t_list instance,

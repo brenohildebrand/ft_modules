@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 02:00:52 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/30 02:07:17 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/30 15:31:09 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ static void	swap_current_with_smallest(
 	t_i32 current_index,
 	t_i32 smallest_index
 ){
-	t_any	current;
-	t_any	smallest;
+	t_i32	current;
+	t_i32	smallest;
 
-	current = list_get(instance, i32_to_any(current_index));
-	smallest = list_get(instance, i32_to_any(smallest_index));
-	list_set(instance, i32_to_any(current_index), smallest);
-	list_set(instance, i32_to_any(smallest_index), current);
+	current = any_as_i32(list_get(instance, i32_to_any(current_index)));
+	smallest = any_as_i32(list_get(instance, i32_to_any(smallest_index)));
+	list_set(instance, i32_to_any(current_index), i32_to_any(smallest));
+	list_set(instance, i32_to_any(smallest_index), i32_to_any(current));
 }
 
 void	list_sort(t_list instance)
@@ -42,8 +42,8 @@ void	list_sort(t_list instance)
 	i = 0;
 	while (i < instance->length)
 	{
-		smallest = list_get(instance, i32_to_any(i));
 		smallest_index = i;
+		smallest = list_get(instance, i32_to_any(smallest_index));
 		j = i + 1;
 		while (j < instance->length)
 		{

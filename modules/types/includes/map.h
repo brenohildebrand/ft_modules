@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 20:25:50 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/30 01:23:51 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/30 04:48:13 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ void		map_destroy(t_map instance);
 void		map_expand(t_map instance);
 t_i32		map_hash_key(t_any key);
 t_bool		map_are_keys_equal(t_any key, t_any another_key);
+t_any		map_get(t_map instance, t_any key);
 void		map_set(t_map map, t_any key, t_any value);
 void		map_set_by_index(t_map map, t_i32 index, t_any value);
-
 t_type		map_entry(void);
 t_map_entry	map_entry_create(void);
 void		map_entry_destroy(t_map_entry instance);
