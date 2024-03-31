@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:16 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/31 19:11:32 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 20:40:46 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,8 @@
 #include "any.h"
 #include <stdio.h>
 
-void	map_set(t_map map, t_any key, t_any value)
+static void	helper(t_i32 index, t_map map, t_any key, t_any value)
 {
-	t_i32	hash;
-	t_i32	index;
-
-	if (map->size + 1 >= map->capacity / 3)
-	{
-		map_expand(map);
-	}
-	hash = map_hash_key(key);
-	index = i32_abs(hash % map->capacity);
 	while (1)
 	{
 		if (map->content[index] == NULL)
@@ -48,4 +39,18 @@ void	map_set(t_map map, t_any key, t_any value)
 		if (index == map->capacity)
 			index = 0;
 	}
+}
+
+void	map_set(t_map map, t_any key, t_any value)
+{
+	t_i32	hash;
+	t_i32	index;
+
+	if (map->size + 1 >= map->capacity / 3)
+	{
+		map_expand(map);
+	}
+	hash = map_hash_key(key);
+	index = i32_abs(hash % map->capacity);
+	helper(index, map, key, value);
 }

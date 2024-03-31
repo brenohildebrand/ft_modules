@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 02:08:01 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/30 02:09:17 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 20:41:24 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,28 @@
 #include "utils.h"
 #include "any.h"
 
-void	list_set(t_list instance, t_any key, t_any value)
+static t_i32	get_normalized_index(t_list instance, t_i32 index)
 {
-	t_i32	index;
-
-	index = any_to_i32(key);
 	if (index < 0)
 	{
 		index = instance->length + index;
 	}
 	if (index < 0)
 	{
-		print_to_stdout("No way! You can't access an index on a list that is less than its negative length.");
+		print_to_stdout("No way! ");
+		print_to_stdout("You can't access an index on a list ");
+		print_to_stdout("that is less than its negative length.");
 		quit(1);
 	}
+	return (index);
+}
+
+void	list_set(t_list instance, t_any key, t_any value)
+{
+	t_i32	index;
+
+	index = any_to_i32(key);
+	index = get_normalized_index(instance, index);
 	if (index >= instance->capacity)
 	{
 		while (index >= instance->capacity)
