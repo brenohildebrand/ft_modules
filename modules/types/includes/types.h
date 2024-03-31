@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:06:31 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/29 18:31:25 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 20:28:29 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 # include <stdlib.h>
 
-# define TRUE (1)
-# define FALSE (0)
+# define TRUE 1
+# define FALSE 0
 
 typedef int						t_bool;
 typedef char					*t_cstring;
@@ -80,7 +80,7 @@ t_pointer	allocate(t_i32 size);
  *
  * @param pointer Pointer to memory previously allocated with allocate().
  */
-void	deallocate(t_pointer pointer);
+void		deallocate(t_pointer pointer);
 
 /**
  * Allocates memory for a new instance of the given type.
@@ -96,14 +96,14 @@ t_instance	new(t_type (*signature)(void));
  * 
  * @param instance The instance to delete.
  */
-void	delete(t_instance instance);
+void		delete(t_instance instance);
 
 /**
  * Exits the program with the given exit code.
  * 
  * @param code The exit code.
  */
-void	quit(t_i32 code);
+void		quit(t_i32 code);
 
 /**
  * Creates a new instance of the given type.
@@ -117,6 +117,6 @@ t_pointer	create(t_type (*signature)(void));
  * 
  * @param instance A pointer to the instance to be destroyed.
  */
-void	destroy(t_pointer instance);
+void		destroy(t_pointer instance);
 
 #endif

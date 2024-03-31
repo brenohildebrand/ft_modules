@@ -6,14 +6,14 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 20:50:25 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/30 05:39:47 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 20:27:32 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef I32_H
 # define I32_H
 
-#include "types.h"
+# include "types.h"
 
 t_type	i32(void);
 t_i32	i32_compare(t_any instance, t_any another_instance);

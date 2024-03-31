@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 18:27:21 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/29 18:37:37 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 20:29:20 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_i32	any_compare(t_any instance, t_any another_instance)
 	{
 		return (instance->type->compare(\
 			instance->value.instance, \
-			another_instance->value.instance));		
+			another_instance->value.instance));
 	}
 	else if (instance->type->is_value)
 	{

@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 02:02:39 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/30 02:05:28 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 20:30:13 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 t_any	list_get(t_list instance, t_any key)
 {
 	t_i32	index;
-	
+
 	index = any_to_i32(key);
 	if (index < 0)
 	{
@@ -26,7 +26,9 @@ t_any	list_get(t_list instance, t_any key)
 	}
 	if (index < 0)
 	{
-		print_to_stdout("No way! You can't access an index on a list that is less than its negative length.");
+		print_to_stdout("No way! ");
+		print_to_stdout("You can't access an index on a list ");
+		print_to_stdout("that is less than its negative length.");
 		quit(1);
 	}
 	if (index >= instance->length)

@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 22:46:45 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/28 09:46:37 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 20:28:45 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
  * @param condition The condition to assert.
  * @param error_message The error_message.
  */
-void assert(t_bool condition, t_cstring error_message);
+void	assert(t_bool condition, t_cstring error_message);
 
 /**
  * Prints the given cstring to stdout.

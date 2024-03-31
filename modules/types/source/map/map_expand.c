@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 00:03:07 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/30 15:05:44 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 20:31:06 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	map_expand(t_map instance)
 	i = 0;
 	while (i < old_capacity)
 	{
-		if(old_content[i] != NULL)
+		if (old_content[i] != NULL)
 		{
 			map_set(instance, old_content[i]->key, old_content[i]->value);
 			deallocate(old_content[i]);

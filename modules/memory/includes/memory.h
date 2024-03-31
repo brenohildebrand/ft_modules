@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 03:00:55 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/28 00:51:25 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 20:27:19 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	*safe_malloc(unsigned int size);
  *
  * @param address Pointer to memory previously allocated with safe_malloc.
  */
-void safe_free(void *address);
+void	safe_free(void *address);
 
 /**
  * Frees the memory allocated with safe_malloc and exits the program with 
@@ -38,6 +38,6 @@ void safe_free(void *address);
  * 
  * @param code The exit code.
  */
-void safe_exit(int code);
+void	safe_exit(int code);
 
 #endif

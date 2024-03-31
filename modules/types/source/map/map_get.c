@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 01:00:42 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/31 19:00:24 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 20:31:17 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_any	map_get(t_map instance, t_any key)
 {
 	t_i32	hash;
 	t_i32	index;
-	
+
 	hash = map_hash_key(key);
 	index = i32_abs(hash % instance->capacity);
 	while (1)
