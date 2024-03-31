@@ -6,13 +6,14 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:16 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/31 18:22:59 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 19:11:32 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "types.h"
 #include "map.h"
 #include "i32.h"
+#include "any.h"
 #include <stdio.h>
 
 void	map_set(t_map map, t_any key, t_any value)
@@ -38,6 +39,8 @@ void	map_set(t_map map, t_any key, t_any value)
 		}
 		else if (map_are_keys_equal(key, map->content[index]->key))
 		{
+			any_destroy(map->content[index]->value);
+			any_destroy(key);
 			map->content[index]->value = value;
 			return ;
 		}

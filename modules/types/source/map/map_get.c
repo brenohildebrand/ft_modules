@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 01:00:42 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/31 18:23:24 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 19:00:24 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "map.h"
 #include "i32.h"
 #include "typetree.h"
+#include "any.h"
 #include <stdio.h>
 
 t_any	map_get(t_map instance, t_any key)
@@ -27,10 +28,12 @@ t_any	map_get(t_map instance, t_any key)
 	{
 		if (instance->content[index] == NULL)
 		{
+			any_destroy(key);
 			return (NULL);
 		}
 		else if (map_are_keys_equal(key, instance->content[index]->key))
 		{
+			any_destroy(key);
 			return (instance->content[index]->value);
 		}
 		index++;

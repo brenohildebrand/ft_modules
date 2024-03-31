@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:02:06 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/29 22:06:47 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/03/31 19:14:11 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ void	map_destroy(t_map instance)
 		map_entry_destroy(instance->content[i]);
 		i++;
 	}
+	delete(instance->content);
 	delete(instance);
 }
