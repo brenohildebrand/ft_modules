@@ -363,22 +363,21 @@ def version():
 	print(f'trillian-v{version}')
 
 # resolve command
-match COMMAND:
-	case 'help':
-		help()
-	case 'init':
-		init()
-	case 'build':
-		build()
-	case 'run':
-		run()
-	case 'norm':
-		norm()
-	case 'install' | 'add':
-		install()
-	case 'uninstall' | 'remove':
-		uninstall()
-	case 'version':
-		version()
-	case _:
-		print("Huh?! Try 'trillian help'.")
+if COMMAND == 'help':
+	help()
+elif COMMAND == 'init':
+	init()
+elif COMMAND == 'build':
+	build()
+elif COMMAND == 'run':
+	run()
+elif COMMAND == 'norm':
+	norm()
+elif COMMAND == 'install' or COMMAND == 'add':
+	install()
+elif COMMAND == 'uninstall' or COMMAND == 'remove':
+	uninstall()
+elif COMMAND == 'version':
+	version()
+else:
+	print("Huh?! Try 'trillian help'.")

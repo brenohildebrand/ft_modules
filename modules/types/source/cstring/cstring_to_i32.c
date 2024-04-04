@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 20:48:40 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/28 21:32:34 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/04/04 14:34:51 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ t_i32	cstring_to_i32(t_cstring cstring)
 	number = 0;
 	while (i8_is_digit(cstring[i]))
 	{
+		number = number * 10 + (cstring[i] - '0');
 		assert(i64_is_i32(number * signal), \
 			"Oops! Invalid conversion from cstring to i32.\n");
-		number = number * 10 + (cstring[i] - '0');
 		i++;
 	}
 	assert(cstring[i] == '\0', \
