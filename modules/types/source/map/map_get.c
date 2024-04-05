@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 01:00:42 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/31 20:31:17 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/04/05 15:12:02 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "i32.h"
 #include "typetree.h"
 #include "any.h"
-#include <stdio.h>
 
 t_any	map_get(t_map instance, t_any key)
 {

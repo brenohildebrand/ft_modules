@@ -6,7 +6,7 @@
 /*   By: bhildebr <bhildebr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:16 by bhildebr          #+#    #+#             */
-/*   Updated: 2024/03/31 20:40:46 by bhildebr         ###   ########.fr       */
+/*   Updated: 2024/04/05 15:11:58 by bhildebr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "map.h"
 #include "i32.h"
 #include "any.h"
-#include <stdio.h>
 
 static void	helper(t_i32 index, t_map map, t_any key, t_any value)
 {
